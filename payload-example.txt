@@ -1,0 +1,8 @@
+
+{
+    "senderPhone" : "123",
+    "receiverPhone" : "1234",
+    "messageText" : "Hi",
+    "timestamp" : "1677368344",
+    "uuid" : "123456"
+}

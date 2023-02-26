@@ -1,0 +1,11 @@
+FROM python:3.8-slim-buster
+
+WORKDIR /app
+
+COPY requirements.txt requirements.txt
+
+RUN pip3 install -r requirements.txt
+
+COPY . .
+
+CMD [ "sh", "-c", "flask db init && flask db migrate && flask db upgrade && python3 app.py" ]

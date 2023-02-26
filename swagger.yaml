@@ -1,0 +1,117 @@
+swagger: '2.0'
+info:
+  title: SMS Inbox APIs
+  description: APIs for sending and receiving SMS messages through SMS Inbox
+  version: 1.0.0
+basePath: /api
+schemes:
+  - https
+
+paths:
+  /send-message:
+    post:
+      tags:
+        - SMS Inbox
+      summary: Send an outbound SMS message
+      description: Send an outbound SMS message from the user of SMS Inbox to a recipient at a specified phone number
+      parameters:
+        - in: body
+          name: message
+          description: SMS message to be sent
+          required: true
+          schema:
+            type: object
+            properties:
+              phone_number:
+                type: string
+                description: Phone number of the recipient
+              message_text:
+                type: string
+                description: Text of the SMS message
+      responses:
+        200:
+          description: SMS message successfully sent
+        400:
+          description: Invalid request data
+        500:
+          description: Internal server error
+
+  /receive-message:
+    post:
+      tags:
+        - SMS Inbox
+      summary: Receive an inbound reply SMS message
+      description: Receive an inbound reply SMS message from the recipient, to be displayed to the user in SMS Inbox
+      parameters:
+        - in: body
+          name: message
+          description: Inbound SMS message received from the recipient
+          required: true
+          schema:
+            type: object
+            properties:
+              senderPhone:
+                type: string
+                description: Phone number of the sender
+              receiverPhone:
+                type: string
+                description: Phone number of the recipient
+              messageText:
+                type: string
+                description: Text of the SMS message
+              timestamp:
+                type: integer
+                description: Unix timestamp in seconds
+              uuid:
+                type: string
+                description: Unique identifier of the SMS message from the “mock SMS provider”
+      responses:
+        200:
+          description: SMS message successfully received
+        400:
+          description: Invalid request data
+        500:
+          description: Internal server error
+
+  /get-conversation/{phone_number}:
+    get:
+      tags:
+        - SMS Inbox
+      summary: Get conversation between the user and a recipient
+      description: Get all SMS messages exchanged between the user and a specified recipient
+      parameters:
+        - in: path
+          name: phone_number
+          description: Phone number of the recipient
+          required: true
+          type: string
+      responses:
+        200:
+          description: Conversation successfully retrieved
+          schema:
+            type: object
+            properties:
+              messages:
+                type: array
+                description: List of all SMS messages exchanged between the user and the recipient
+                items:
+                  type: object
+                  properties:
+                    phone_number:
+                      type: string
+                      description: Phone number of the sender or recipient
+                    message_text:
+                      type: string
+                      description: Text of the SMS message
+                    timestamp:
+                      type: integer
+                      description: Unix timestamp in seconds
+                    direction:
+                      type: string
+                      description: Direction of the SMS message, either 'sent' or 'received'
+        400:
+          description: Invalid request data
+        404:
+          description: User not found
+        500:
+          description: Internal server error
